@@ -12,11 +12,11 @@ const lineReader = require('readline').createInterface({
 });
 // Sets an output file to be created
 const output = fs.createWriteStream("output.txt");
-// Read through each line of the input file
 
 // Keep track of line count in order to know how much of a delay to apply. Starts at 1.
 const line_counter = ((i = 0) => () => ++i)();
 
+// Read through each line of the input file
 lineReader.on('line', (line, lineno = line_counter()) => {
   let breakPoint = line.indexOf('=');
   let library = line.slice(0, breakPoint);
@@ -33,7 +33,7 @@ function getData(library, line) {
     }
     repo = data.items[0];
     output.write(line);
-    // Sometimes you don't get anything back... Either due to the search returning nothing, or an error elsewhere. You don't want the entire script to crash when that happens. 
+    // Sometimes you don't get anything back... Either due to the search returning nothing, or an error elsewhere. You don't want the entire script to crash when that happens.
     if(repo){
       output.write(`\t${repo.html_url}`);
       output.write(`\t${repo.description}\n`);
