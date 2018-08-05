@@ -2,7 +2,8 @@ const github = require('octonode');
 const fs = require('fs');
 // Use your credentials here if you want to be able to send 30 requests at a time! Change the SEARCH_LIMIT afterwards.
 let credentials = {username: '', password: ''};
-const SEARCH_LIMIT = 10;
+// Ideally use slightly less than your limit or sometimes it loses requests.
+const SEARCH_LIMIT = 8;
 const client = github.client(credentials);
 const search = client.search();
 
@@ -31,13 +32,23 @@ function getData(library, line) {
     if(err){
       console.log(err);
     }
+    // potentially adjust later to go through the search results looking for name matching library...
     repo = data.items[0];
     output.write(line);
     // Sometimes you don't get anything back... Either due to the search returning nothing, or an error elsewhere. You don't want the entire script to crash when that happens.
+    console.log(repo);
     if(repo){
       output.write(`\t${repo.html_url}`);
-      output.write(`\t${repo.description}\n`);
+      output.write(`\t${repo.description}`);
+      if(repo.name !== library) {
+        output.write(`\t FoundMany`)
+      }else{
+        output.write(`\t InGithub`)
+      }
+    }else{
+      output.write(`\t NotInGithub`);
     }
+    output.write('\n');
     output.write('\n');
   })
 }
